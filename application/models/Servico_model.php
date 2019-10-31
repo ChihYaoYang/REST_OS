@@ -17,7 +17,8 @@ class Servico_model extends CI_Model {
     }
     public function insert($data = array()) {
         $this->db->insert(self::table, $data);
-        return $this->db->affected_rows();
+        // return $this->db->affected_rows();
+        return $this->db->insert_id(); //return valor id
     }
     public function delete($id) {
         if ($id > 0) {
@@ -38,4 +39,3 @@ class Servico_model extends CI_Model {
         }
     }
 }
-?>

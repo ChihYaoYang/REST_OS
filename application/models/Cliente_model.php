@@ -28,10 +28,10 @@ class Cliente_model extends CI_Model
         $query = $this->db->get(self::table);
         return $query->row(0);
     }
-    public function insert($data = array())
+    public function insert($dados = array())
     {
-        $data['password'] = sha1($data['password'] . self::password);
-        $this->db->insert(self::table, $data);
+        $dados['password'] = sha1($dados['password'] . self::password);
+        $this->db->insert(self::table, $dados);
         // return $this->db->affected_rows();
         return $this->db->insert_id(); //return valor id
     }

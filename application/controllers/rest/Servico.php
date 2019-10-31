@@ -26,32 +26,32 @@ class Servico extends REST_Controller
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
-    public function index_post()
-    {
-        if ((!$this->post('descricao')) || (!$this->post('precos'))) {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Campo não preenchidos'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-            return;
-        }
+    // public function index_post()
+    // {
+    //     if ((!$this->post('descricao')) || (!$this->post('precos'))) {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Campo não preenchidos'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //         return;
+    //     }
 
-        $data = array(
-            'descricao' => $this->post('descricao'),
-            'precos' => $this->post('precos'),
-        );
-        if ($this->servico->insert($data)) {
-            $this->set_response([
-                'status' => true,
-                'message' => 'Serviço inserido com successo !'
-            ], REST_Controller_Definitions::HTTP_OK);
-        } else {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Falha ao inserir serviço'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-        }
-    }
+    //     $data = array(
+    //         'descricao' => $this->post('descricao'),
+    //         'precos' => $this->post('precos'),
+    //     );
+    //     if ($this->servico->insert($data)) {
+    //         $this->set_response([
+    //             'status' => true,
+    //             'message' => 'Serviço inserido com successo !'
+    //         ], REST_Controller_Definitions::HTTP_OK);
+    //     } else {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Falha ao inserir serviço'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //     }
+    // }
 
     public function index_delete()
     {

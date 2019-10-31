@@ -26,39 +26,39 @@ class Cliente extends REST_Controller
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
-    public function index_post()
-    {
-        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf')) || (!$this->post('endereco'))) {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Campo não preenchidos'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-            return;
-        }
-        //gerar string aleatório
-        $this->load->helper('string');
-        $randpass = random_string('alnum', 8);
+    // public function index_post()
+    // {
+    //     if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf')) || (!$this->post('endereco'))) {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Campo não preenchidos'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //         return;
+    //     }
+    //     //gerar string aleatório
+    //     $this->load->helper('string');
+    //     $randpass = random_string('alnum', 8);
 
-        $data = array(
-            'nome' => $this->post('nome'),
-            'email' => $this->post('email'),
-            'password' => $randpass,
-            'telefone' => $this->post('telefone'),
-            'cpf' => $this->post('cpf'),
-            'endereco' => $this->post('endereco')
-        );
-        if ($this->cliente->insert($data)) {
-            $this->set_response([
-                'status' => true,
-                'message' => 'Cliente inserido com successo !'
-            ], REST_Controller_Definitions::HTTP_OK);
-        } else {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Falha ao inserir cliente'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-        }
-    }
+    //     $data = array(
+    //         'nome' => $this->post('nome'),
+    //         'email' => $this->post('email'),
+    //         'password' => $randpass,
+    //         'telefone' => $this->post('telefone'),
+    //         'cpf' => $this->post('cpf'),
+    //         'endereco' => $this->post('endereco')
+    //     );
+    //     if ($this->cliente->insert($data)) {
+    //         $this->set_response([
+    //             'status' => true,
+    //             'message' => 'Cliente inserido com successo !'
+    //         ], REST_Controller_Definitions::HTTP_OK);
+    //     } else {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Falha ao inserir cliente'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //     }
+    // }
 
     public function index_delete()
     {
