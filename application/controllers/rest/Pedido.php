@@ -19,11 +19,12 @@ class Pedido extends REST_Controller
     }
     public function index_get()
     {
+        $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
         if ($id <= 0) {
-            $data = $this->pedido->get();
+            $data = $this->pedido->get($token);
         } else {
-            $data = $this->pedido->getOne($id);
+            $data = $this->pedido->getOne($id,$token);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
@@ -42,7 +43,7 @@ class Pedido extends REST_Controller
             'cd_cliente' => $id,
             'cd_tipo' => $this->post('cd_tipo'),
             'cd_Status' => $this->post('cd_Status'),
-            'cd_funcionario' => $this->session->userdata('idUsuario'),
+            'cd_funcionario' => $this->post('cd_funcionario'),
             'cd_servicos' => $this->post('cd_servicos'),
             'marca' => $this->post('marca'),
             'modelo' => $this->post('modelo'),
@@ -98,7 +99,7 @@ class Pedido extends REST_Controller
         $data = array(
             'cd_tipo' => $this->post('cd_tipo'),
             'cd_Status' => $this->post('cd_Status'),
-            'cd_funcionario' => $this->session->userdata('idUsuario'),
+            'cd_funcionario' => $this->post('cd_funcionario'),
             'cd_servicos' => $this->post('cd_servicos'),
             'marca' => $this->post('marca'),
             'modelo' => $this->post('modelo'),

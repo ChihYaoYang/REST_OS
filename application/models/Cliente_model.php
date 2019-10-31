@@ -1,13 +1,16 @@
 <?php
-class Cliente_model extends CI_Model {
+class Cliente_model extends CI_Model
+{
     const table = 'cliente';
     const password = 'ryanSENAC';
-    
-    public function get() {
+
+    public function get()
+    {
         $query = $this->db->get(self::table);
         return $query->result();
     }
-    public function getOne($id) {
+    public function getOne($id)
+    {
         if ($id > 0) {
             $this->db->where('id', $id);
             $query = $this->db->get(self::table);
@@ -16,13 +19,24 @@ class Cliente_model extends CI_Model {
             return false;
         }
     }
-    public function insert($data = array()) {
+    //Método que busca usuario no banco de dados
+    //Recebe parametro email e senha
+    public function getUsuario($email, $password)
+    {
+        //Validar Email or Username and senha
+        $this->db->where('(email = "' . $email . '") AND password ="' . sha1($password . 'ryanSENAC') . '"');
+        $query = $this->db->get(self::table);
+        return $query->row(0);
+    }
+    public function insert($data = array())
+    {
         $data['password'] = sha1($data['password'] . self::password);
         $this->db->insert(self::table, $data);
         // return $this->db->affected_rows();
         return $this->db->insert_id(); //return valor id
     }
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id > 0) {
             $this->db->where('id', $id);
             $this->db->delete(self::table);
@@ -31,7 +45,8 @@ class Cliente_model extends CI_Model {
             return false;
         }
     }
-    public function update($id, $data = array()) {
+    public function update($id, $data = array())
+    {
         if ($id > 0) {
             $this->db->where('id', $id);
             $this->db->update(self::table, $data);
@@ -41,4 +56,3 @@ class Cliente_model extends CI_Model {
         }
     }
 }
-?>

@@ -15,51 +15,69 @@ class Funcionario extends REST_Controller
     {
         parent::__construct();
         $this->load->model('Funcionario_model', 'funcionario');
+        $this->load->model('Cliente_model', 'cliente');
     }
-    public function index_get()
-    {
-        $id = (int) $this->get('id');
-        if ($id <= 0) {
-            $data = $this->funcionario->get();
-        } else {
-            $data = $this->funcionario->getOne($id);
-        }
-        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
-    }
-    public function index_post()
-    {
-        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf')) || (!$this->post('endereco'))) {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Campo não preenchidos'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-            return;
-        }
-        //gerar string aleatório
-        $this->load->helper('string');
-        $randpass = random_string('alnum', 8);
 
-        $data = array(
-            'nome' => $this->post('nome'),
-            'email' => $this->post('email'),
-            'password' => $randpass,
-            'telefone' => $this->post('telefone'),
-            'cpf' => $this->post('cpf'),
-            'endereco' => $this->post('endereco')
+    //////////////////////////////////////////////////////////
+    public function login()
+    {
+        $post = json_decode(file_get_contents("php://input"));
+        if (empty($post->email) || empty($post->password)) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        } else {
+            $login = $this->funcionario->get(array('email' => $post->email, 'password' => $post->password));
+            $usuario = $this->cliente->getUsuario(
+                $this->input->post('email'), $this->input->post('password')
         );
-        if ($this->funcionario->insert($data)) {
-            $this->set_response([
-                'status' => true,
-                'message' => 'Funcionário inserido com successo !'
-            ], REST_Controller_Definitions::HTTP_OK);
-        } else {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Falha ao inserir funcionário'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            if ($login || $usuario) {
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            } else {
+                $this->output
+                    ->set_status_header(400)
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
         }
     }
 
+    public function cadastro()
+    {
+        $post = json_decode(file_get_contents("php://input"));
+        if (empty($post->nome) || empty($post->email) || empty($post->telefone) || empty($post->cpf) || empty($post->endereco)) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        } else {
+            //gerar string aleatório
+            $this->load->helper('string');
+            $randpass = random_string('alnum', 8);
+            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $randpass, 'telefone' => $post->telefone, 'cpf' => $post->cpf, 'endereco' => $post->endereco));
+            if ($insert > 0) {
+                $newToken = md5('salt' . $insert);
+                $this->funcionario->insertApiKey(array('cd_funcionario' => $insert, 'apikey' => $newToken));
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(
+                        array(
+                            'id' => "$insert",
+                            'email' => $post->email,
+                            'nome' => $post->nome,
+                            'token' => $newToken
+                        ),
+                        JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    ));
+            } else {
+                $this->output
+                    ->set_status_header(400)
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Falha no cadastro'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
+        }
+    }
+
+    //////////////////////////////////////////////////////////
     public function index_delete()
     {
         $id = (int) $this->get('id');
