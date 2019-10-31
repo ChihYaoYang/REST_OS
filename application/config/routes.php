@@ -52,3 +52,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//get id
+$route['rest/Cliente/(:num)'] = 'rest/Cliente/index/id/$1';
+$route['rest/Funcionario/(:num)'] = 'rest/Funcionario/index/id/$1';
+$route['rest/Pedido/(:num)'] = 'rest/Pedido/index/id/$1';
+$route['rest/Servico/(:num)'] = 'rest/Servico/index/id/$1';
+$route['rest/Status/(:num)'] = 'rest/Status/index/id/$1';
+$route['rest/Tipo/(:num)'] = 'rest/Tipo/index/id/$1';
