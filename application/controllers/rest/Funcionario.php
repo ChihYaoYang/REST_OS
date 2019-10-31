@@ -29,12 +29,16 @@ class Funcionario extends REST_Controller
         } else {
             $login = $this->funcionario->get(array('email' => $post->email, 'password' => $post->password));
             $usuario = $this->cliente->getUsuario(
-                $this->input->post('email'), $this->input->post('password')
-        );
+                $this->input->post('email'),
+                $this->input->post('password')
+            );
             if ($login || $usuario) {
                 $this->output
                     ->set_status_header(200)
-                    ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                    ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'status' => $login->status, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(array('id' => $usuario->id, 'nome' => $usuario->nome, 'email' => $usuario->email), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             } else {
                 $this->output
                     ->set_status_header(400)
