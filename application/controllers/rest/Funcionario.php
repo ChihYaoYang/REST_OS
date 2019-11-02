@@ -9,7 +9,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/REST_Controller_Definitions.php';
 require APPPATH . '/libraries/Format.php';
 
-class Funcionario extends REST_Controller
+class Funcionario extends CI_Controller
 {
     public function __construct()
     {
@@ -28,14 +28,12 @@ class Funcionario extends REST_Controller
                 ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         } else {
             $login = $this->funcionario->get(array('email' => $post->email, 'password' => $post->password));
-            $usuario = $this->cliente->getUsuario(
-                $this->input->post('email'),
-                $this->input->post('password')
-            );
-            if ($login || $usuario) {
+            $usuario = $this->cliente->getUsuario(array('email' => $post->email, 'password' => $post->password));
+            if ($login) {
                 $this->output
                     ->set_status_header(200)
                     ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'status' => $login->status, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            } else if ($usuario) {
                 $this->output
                     ->set_status_header(200)
                     ->set_output(json_encode(array('id' => $usuario->id, 'nome' => $usuario->nome, 'email' => $usuario->email), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
@@ -50,7 +48,7 @@ class Funcionario extends REST_Controller
     public function cadastro()
     {
         $post = json_decode(file_get_contents("php://input"));
-        if (empty($post->nome) || empty($post->email) || empty($post->telefone) || empty($post->cpf) || empty($post->endereco)) {
+        if (empty($post->nome) || empty($post->email) || empty($post->telefone) || empty($post->cpf)) {
             $this->output
                 ->set_status_header(400)
                 ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
@@ -58,7 +56,7 @@ class Funcionario extends REST_Controller
             //gerar string aleatório
             $this->load->helper('string');
             $randpass = random_string('alnum', 8);
-            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $randpass, 'telefone' => $post->telefone, 'cpf' => $post->cpf, 'endereco' => $post->endereco));
+            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $randpass, 'telefone' => $post->telefone, 'cpf' => $post->cpf));
             if ($insert > 0) {
                 $newToken = md5('salt' . $insert);
                 $this->funcionario->insertApiKey(array('cd_funcionario' => $insert, 'apikey' => $newToken));
@@ -107,7 +105,7 @@ class Funcionario extends REST_Controller
     public function index_put()
     {
         $id = (int) $this->get('id');
-        if ((!$this->put('nome')) || (!$this->put('email')) || (!$this->put('password')) || (!$this->put('telefone')) || (!$this->put('cpf')) || (!$this->put('endereco')) || ($id <= 0)) {
+        if ((!$this->put('nome')) || (!$this->put('email')) || (!$this->put('password')) || (!$this->put('telefone')) || (!$this->put('cpf')) || ($id <= 0)) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo não preenchidos'
@@ -119,8 +117,7 @@ class Funcionario extends REST_Controller
             'email' => $this->put('email'),
             'password' => $this->put('password'),
             'telefone' => $this->put('telefone'),
-            'cpf' => $this->put('cpf'),
-            'endereco' => $this->put('endereco')
+            'cpf' => $this->put('cpf')
         );
         if ($this->funcionario->update($id, $data)) {
             $this->set_response([

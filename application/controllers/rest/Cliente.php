@@ -85,7 +85,7 @@ class Cliente extends REST_Controller
     public function index_put()
     {
         $id = (int) $this->get('id');
-        if ((!$this->put('nome')) || (!$this->put('email')) || (!$this->put('password')) || (!$this->put('telefone')) || (!$this->put('cpf')) || (!$this->put('endereco')) || ($id <= 0)) {
+        if ((!$this->put('nome')) || (!$this->put('email')) || (!$this->put('password')) || (!$this->put('telefone')) || (!$this->put('cpf')) || ($id <= 0)) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo não preenchidos'
@@ -97,8 +97,7 @@ class Cliente extends REST_Controller
             'email' => $this->put('email'),
             'password' => $this->put('password'),
             'telefone' => $this->put('telefone'),
-            'cpf' => $this->put('cpf'),
-            'endereco' => $this->put('endereco')
+            'cpf' => $this->put('cpf')
         );
         if ($this->cliente->update($id, $data)) {
             $this->set_response([

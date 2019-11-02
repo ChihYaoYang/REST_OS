@@ -32,7 +32,7 @@ class Pedido extends REST_Controller
     public function index_post()
     {
         //Cadastro cliente
-        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf')) || (!$this->post('endereco'))) {
+        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf')) ) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo não preenchidos'
@@ -48,8 +48,7 @@ class Pedido extends REST_Controller
             'email' => $this->post('email'),
             'password' => $randpass,
             'telefone' => $this->post('telefone'),
-            'cpf' => $this->post('cpf'),
-            'endereco' => $this->post('endereco')
+            'cpf' => $this->post('cpf')
         );
         $insert = $this->cliente->insert($dados);
         /////////////////////////////////////////////////////////////////////

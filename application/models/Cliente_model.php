@@ -21,12 +21,11 @@ class Cliente_model extends CI_Model
     }
     //Método que busca usuario no banco de dados
     //Recebe parametro email e senha
-    public function getUsuario($email, $password)
+    public function getUsuario($params)
     {
-        //Validar Email or Username and senha
-        $this->db->where('(email = "' . $email . '") AND password ="' . sha1($password . 'ryanSENAC') . '"');
-        $query = $this->db->get(self::table);
-        return $query->row(0);
+        $params['password'] = sha1($params['password'] . self::password);
+        $query = $this->db->get_where(self::table, $params);
+        return $query->row();
     }
     public function insert($dados = array())
     {
