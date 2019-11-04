@@ -4,7 +4,7 @@ class Funcionario_model extends CI_Model
     const table = 'funcionario';
     const password = 'ryanSENAC';
 
-    ////////////////////////////////
+    ////////////////Login////////////////
     public function insert($fields)
     {
         $fields['password'] = sha1($fields['password'] . self::password);
@@ -29,12 +29,26 @@ class Funcionario_model extends CI_Model
 
     ////////////////////////////////
 
+    public function getAll() {
+        $query = $this->db->get(self::table);
+        return $query->result();
+    }
+    public function getOne($id) {
+        if ($id > 0) {
+            $this->db->where('id', $id);
+            $query = $this->db->get(self::table);
+            return $query->row(0);
+        } else {
+            return false;
+        }
+    }
     public function delete($id)
     {
         if ($id > 0) {
-            $this->db->where('id', $id,'cd_funcionario', $id);
-            $this->db->delete(self::table);
+            $this->db->where('cd_funcionario', $id);
             $this->db->delete('token');
+            $this->db->where('id', $id);
+            $this->db->delete(self::table);
             return $this->db->affected_rows();
         } else {
             return false;
@@ -43,6 +57,7 @@ class Funcionario_model extends CI_Model
     public function update($id, $data = array())
     {
         if ($id > 0) {
+            $data['password'] = sha1($data['password'] . self::password);
             $this->db->where('id', $id);
             $this->db->update(self::table, $data);
             return $this->db->affected_rows();

@@ -31,12 +31,14 @@ class Cliente_model extends CI_Model
     {
         $dados['password'] = sha1($dados['password'] . self::password);
         $this->db->insert(self::table, $dados);
-        // return $this->db->affected_rows();
-        return $this->db->insert_id(); //return valor id
+        //return valor id
+        return $this->db->insert_id(); 
     }
     public function delete($id)
     {
         if ($id > 0) {
+            $this->db->where('cd_cliente', $id);
+            $this->db->delete('cadastro_pedido');
             $this->db->where('id', $id);
             $this->db->delete(self::table);
             return $this->db->affected_rows();
@@ -47,6 +49,7 @@ class Cliente_model extends CI_Model
     public function update($id, $data = array())
     {
         if ($id > 0) {
+            $data['password'] = sha1($data['password'] . self::password);
             $this->db->where('id', $id);
             $this->db->update(self::table, $data);
             return $this->db->affected_rows();

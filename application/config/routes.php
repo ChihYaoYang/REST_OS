@@ -54,6 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 //get id
+$route['rest/Login/(:num)'] = 'rest/Login/index/id/$1';
 $route['rest/Cliente/(:num)'] = 'rest/Cliente/index/id/$1';
 $route['rest/Funcionario/(:num)'] = 'rest/Funcionario/index/id/$1';
 $route['rest/Pedido/(:num)'] = 'rest/Pedido/index/id/$1';

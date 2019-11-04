@@ -9,74 +9,21 @@ require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/REST_Controller_Definitions.php';
 require APPPATH . '/libraries/Format.php';
 
-class Funcionario extends CI_Controller
+class Funcionario extends REST_Controller
 {
     public function __construct()
     {
         parent::__construct();
         $this->load->model('Funcionario_model', 'funcionario');
-        $this->load->model('Cliente_model', 'cliente');
     }
-
-    //////////////////////////////////////////////////////////
-    public function login()
-    {
-        $post = json_decode(file_get_contents("php://input"));
-        if (empty($post->email) || empty($post->password)) {
-            $this->output
-                ->set_status_header(400)
-                ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    public function index_get() {
+        $id = (int) $this->get('id');
+        if($id <= 0) {
+            $data = $this->funcionario->getAll();
         } else {
-            $login = $this->funcionario->get(array('email' => $post->email, 'password' => $post->password));
-            $usuario = $this->cliente->getUsuario(array('email' => $post->email, 'password' => $post->password));
-            if ($login) {
-                $this->output
-                    ->set_status_header(200)
-                    ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'status' => $login->status, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            } else if ($usuario) {
-                $this->output
-                    ->set_status_header(200)
-                    ->set_output(json_encode(array('id' => $usuario->id, 'nome' => $usuario->nome, 'email' => $usuario->email), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            } else {
-                $this->output
-                    ->set_status_header(400)
-                    ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            }
+            $data = $this->funcionario->getOne($id);
         }
-    }
-
-    public function cadastro()
-    {
-        $post = json_decode(file_get_contents("php://input"));
-        if (empty($post->nome) || empty($post->email) || empty($post->telefone) || empty($post->cpf)) {
-            $this->output
-                ->set_status_header(400)
-                ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        } else {
-            //gerar string aleatório
-            $this->load->helper('string');
-            $randpass = random_string('alnum', 8);
-            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $randpass, 'telefone' => $post->telefone, 'cpf' => $post->cpf));
-            if ($insert > 0) {
-                $newToken = md5('salt' . $insert);
-                $this->funcionario->insertApiKey(array('cd_funcionario' => $insert, 'apikey' => $newToken));
-                $this->output
-                    ->set_status_header(200)
-                    ->set_output(json_encode(
-                        array(
-                            'id' => "$insert",
-                            'email' => $post->email,
-                            'nome' => $post->nome,
-                            'token' => $newToken
-                        ),
-                        JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                    ));
-            } else {
-                $this->output
-                    ->set_status_header(400)
-                    ->set_output(json_encode(array('status' => false, 'error' => 'Falha no cadastro'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            }
-        }
+        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
 
     //////////////////////////////////////////////////////////

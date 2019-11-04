@@ -22,6 +22,8 @@ class Servico_model extends CI_Model {
     }
     public function delete($id) {
         if ($id > 0) {
+            $this->db->where('cd_servicos', $id);
+            $this->db->delete('cadastro_pedido');
             $this->db->where('id', $id);
             $this->db->delete(self::table);
             return $this->db->affected_rows();
