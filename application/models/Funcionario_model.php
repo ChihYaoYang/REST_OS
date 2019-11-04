@@ -26,14 +26,15 @@ class Funcionario_model extends CI_Model
         $query = $this->db->get_where(self::table, $params);
         return $query->row();
     }
-
     ////////////////////////////////
 
-    public function getAll() {
+    public function getAll()
+    {
         $query = $this->db->get(self::table);
         return $query->result();
     }
-    public function getOne($id) {
+    public function getOne($id)
+    {
         if ($id > 0) {
             $this->db->where('id', $id);
             $query = $this->db->get(self::table);

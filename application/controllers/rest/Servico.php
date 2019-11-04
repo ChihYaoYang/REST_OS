@@ -15,9 +15,7 @@ class Servico extends REST_Controller
     {
         parent::__construct();
         $this->load->model('Pedido_model', 'pedido');
-        $this->load->model('Cliente_model', 'cliente');
         $this->load->model('Servico_model', 'servicos');
-        date_default_timezone_set('America/Sao_Paulo');
     }
     public function index_get()
     {
@@ -31,7 +29,7 @@ class Servico extends REST_Controller
     }
 
 
-       public function index_delete()
+    public function index_delete()
     {
         $id = (int) $this->get('id');
         if ($id <= 0) {
@@ -54,7 +52,8 @@ class Servico extends REST_Controller
         }
     }
 
-    //cadastrara novo servicos
+    //cadastrar serviço novo e inserir tabela cadastro_pedido
+    //function put apenas alterar(inserir) cd_servicos
     public function index_put()
     {
         $id = (int) $this->get('id');
@@ -71,9 +70,9 @@ class Servico extends REST_Controller
             'precos' => $this->put('precos')
         );
         $insert_services = $this->servicos->insert($dados);
-        //////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
         if ($insert_services > 0) {
-                if (($id <= 0)) {
+            if (($id <= 0)) {
                 $this->set_response([
                     'status' => false,
                     'error' => 'Campo não preenchidos' . $id
@@ -101,32 +100,4 @@ class Servico extends REST_Controller
             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-
-
-    // public function index_put()
-    // {
-    //     $id = (int) $this->get('id');
-    //     if ((!$this->put('servico')) || (!$this->put('precos')) || ($id <= 0)) {
-    //         $this->set_response([
-    //             'status' => false,
-    //             'error' => 'Campo não preenchidos'
-    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-    //         return;
-    //     }
-    //     $data = array(
-    //         'servico' => $this->put('servico'),
-    //         'precos' => $this->put('precos'),
-    //     );
-    //     if ($this->servico->update($id, $data)) {
-    //         $this->set_response([
-    //             'status' => true,
-    //             'message' => 'Serviço alterado com successo !'
-    //         ], REST_Controller_Definitions::HTTP_OK);
-    //     } else {
-    //         $this->set_response([
-    //             'status' => false,
-    //             'error' => 'Falha ao alterar serviço'
-    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-    //     }
-    // }
 }

@@ -16,17 +16,16 @@ class Funcionario extends REST_Controller
         parent::__construct();
         $this->load->model('Funcionario_model', 'funcionario');
     }
-    public function index_get() {
+    public function index_get()
+    {
         $id = (int) $this->get('id');
-        if($id <= 0) {
+        if ($id <= 0) {
             $data = $this->funcionario->getAll();
         } else {
             $data = $this->funcionario->getOne($id);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
-
-    //////////////////////////////////////////////////////////
     public function index_delete()
     {
         $id = (int) $this->get('id');

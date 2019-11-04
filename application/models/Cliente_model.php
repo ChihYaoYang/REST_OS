@@ -19,8 +19,7 @@ class Cliente_model extends CI_Model
             return false;
         }
     }
-    //Método que busca usuario no banco de dados
-    //Recebe parametro email e senha
+
     public function getUsuario($params)
     {
         $params['password'] = sha1($params['password'] . self::password);
@@ -32,7 +31,7 @@ class Cliente_model extends CI_Model
         $dados['password'] = sha1($dados['password'] . self::password);
         $this->db->insert(self::table, $dados);
         //return valor id
-        return $this->db->insert_id(); 
+        return $this->db->insert_id();
     }
     public function delete($id)
     {

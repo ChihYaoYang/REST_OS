@@ -18,7 +18,6 @@ class Login extends CI_Controller
         $this->load->model('Cliente_model', 'cliente');
     }
 
-    //////////////////////////////////////////////////////////
     public function login()
     {
         $post = json_decode(file_get_contents("php://input"));

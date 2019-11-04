@@ -17,8 +17,8 @@ class Servico_model extends CI_Model {
     }
     public function insert($data = array()) {
         $this->db->insert(self::table, $data);
-        // return $this->db->affected_rows();
-        return $this->db->insert_id(); //return valor id
+        //retorna último id que foi inserido no DB
+        return $this->db->insert_id();
     }
     public function delete($id) {
         if ($id > 0) {
