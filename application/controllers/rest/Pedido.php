@@ -34,21 +34,18 @@ class Pedido extends REST_Controller
     public function novo_pedido_post()
     {
         //Cadastro cliente
-        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('telefone')) || (!$this->post('cpf'))) {
+        if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('password')) || (!$this->post('telefone')) || (!$this->post('cpf'))) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo não preenchidos'
             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
         }
-        //gerar string aleatório
-        $this->load->helper('string');
-        $randpass = random_string('alnum', 8);
 
         $dados = array(
             'nome' => $this->post('nome'),
             'email' => $this->post('email'),
-            'password' => $randpass,
+            'password' => $this->post('password'),
             'telefone' => $this->post('telefone'),
             'cpf' => $this->post('cpf')
         );

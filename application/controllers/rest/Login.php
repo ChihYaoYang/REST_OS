@@ -47,15 +47,12 @@ class Login extends CI_Controller
     public function cadastro()
     {
         $post = json_decode(file_get_contents("php://input"));
-        if (empty($post->nome) || empty($post->email) || empty($post->telefone) || empty($post->cpf)) {
+        if (empty($post->nome) || empty($post->email) || empty($post->password) || empty($post->telefone) || empty($post->cpf)) {
             $this->output
                 ->set_status_header(400)
                 ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         } else {
-            //gerar string aleatório
-            $this->load->helper('string');
-            $randpass = random_string('alnum', 8);
-            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $randpass, 'telefone' => $post->telefone, 'cpf' => $post->cpf));
+            $insert = $this->funcionario->insert(array('nome' => $post->nome, 'email' => $post->email, 'password' => $post->password, 'telefone' => $post->telefone, 'cpf' => $post->cpf));
             if ($insert > 0) {
                 $newToken = md5('salt' . $insert);
                 $this->funcionario->insertApiKey(array('cd_funcionario' => $insert, 'apikey' => $newToken));
@@ -77,6 +74,4 @@ class Login extends CI_Controller
             }
         }
     }
-
- 
 }
