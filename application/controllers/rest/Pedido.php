@@ -17,6 +17,7 @@ class Pedido extends REST_Controller
         $this->load->model('Pedido_model', 'pedido');
         $this->load->model('Cliente_model', 'cliente');
         $this->load->model('Servico_model', 'servicos');
+        $this->load->model('Item_pedido_model', 'item');
         date_default_timezone_set('America/Sao_Paulo');
     }
     public function index_get()
@@ -25,8 +26,10 @@ class Pedido extends REST_Controller
         $id = (int) $this->get('id');
         if ($id <= 0) {
             $data = $this->pedido->get($token);
+            $data = $this->item->get($token);
         } else {
             $data = $this->pedido->getOne($id, $token);
+            $data = $this->item->getOne($id,$token);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
@@ -34,7 +37,6 @@ class Pedido extends REST_Controller
     //Novo pedido com formaulário de dados do cliente para cadastrar novo cliente
     public function novo_pedido_post()
     {
-        //Cadastro cliente
         if ((!$this->post('nome')) || (!$this->post('email')) || (!$this->post('password')) || (!$this->post('telefone')) || (!$this->post('cpf'))) {
             $this->set_response([
                 'status' => false,
@@ -51,7 +53,6 @@ class Pedido extends REST_Controller
             'cpf' => $this->post('cpf')
         );
         $insert = $this->cliente->insert($dados);
-        //get last id do cliente que foi inserido
         if ($insert > 0) {
             if ((!$this->post('cd_tipo')) || (!$this->post('cd_status')) || (!$this->post('cd_funcionario')) || (!$this->post('marca')) || (!$this->post('modelo')) || (!$this->post('defeito')) || (!$this->post('descricao'))) {
                 $this->set_response([
@@ -65,7 +66,6 @@ class Pedido extends REST_Controller
                 'cd_tipo' => $this->post('cd_tipo'),
                 'cd_status' => $this->post('cd_status'),
                 'cd_funcionario' => $this->post('cd_funcionario'),
-                'cd_servicos' => $this->post('cd_servicos'),
                 'marca' => $this->post('marca'),
                 'modelo' => $this->post('modelo'),
                 'defeito' => $this->post('defeito'),
@@ -90,7 +90,7 @@ class Pedido extends REST_Controller
             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-    //cadastrar pedido sem formulário dos cliente///
+    ///cadastrar pedido sem formulário dos cliente///
     public function index_post()
     {
         if ((!$this->post('cd_cliente')) || (!$this->post('cd_tipo')) || (!$this->post('cd_status')) || (!$this->post('cd_funcionario')) || (!$this->post('marca')) || (!$this->post('modelo')) || (!$this->post('defeito')) || (!$this->post('descricao'))) {
@@ -123,51 +123,57 @@ class Pedido extends REST_Controller
             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-
-    //alterar pedido e inseri o servios que serão feitos
-    // public function index_put()
-    // {
-    //     $id = (int) $this->get('id');
-    //     if ((!$this->put('servico')) || (!$this->put('precos'))) {
-    //         $this->set_response([
-    //             'status' => false,
-    //             'error' => 'Campo não preenchidos'
-    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-    //         return;
-    //     }
-    //     $dados = array(
-    //         'servico' => $this->put('servico'),
-    //         'precos' => $this->put('precos')
-    //     );
-    //     ////////////////////////////////////////////////////////////////////////////////////
-    //     if ((!$this->put('cd_tipo')) || (!$this->put('cd_status')) || (!$this->put('cd_funcionario')) || (!$this->put('cd_servicos')) || (!$this->put('marca')) || (!$this->put('modelo')) || (!$this->put('defeito')) || (!$this->put('descricao')) || ($id <= 0)) {
-    //         $this->set_response([
-    //             'status' => false,
-    //             'error' => 'Campo não preenchidos' . $this->put('cd_servicos')
-    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-    //         return;
-    //     }
-    //     $this->servicos->update($this->put('cd_servicos'), $dados);
-    //     $data = array(
-    //         'cd_tipo' => $this->put('cd_tipo'),
-    //         'cd_status' => $this->put('cd_status'),
-    //         'cd_funcionario' => $this->put('cd_funcionario'),
-    //         'cd_servicos' => $this->put('cd_servicos'),
-    //         'marca' => $this->put('marca'),
-    //         'modelo' => $this->put('modelo'),
-    //         'defeito' => $this->put('defeito'),
-    //         'descricao' => $this->put('descricao')
-    //     );
-    //     if ($this->pedido->update($id, $data)) {
-    //         $this->set_response([
-    //             'status' => true,
-    //             'message' => 'Pedido alterado com successo !'
-    //         ], REST_Controller_Definitions::HTTP_OK);
-    //     } else {
-    //         $this->set_response([
-    //             'status' => false,
-    //             'error' => 'Falha ao alterar pedido'
-    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-    //     }
-    // }
+    public function index_delete()
+    {
+        $id = (int) $this->get('id');
+        if ($id <= 0) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Parâmetros obrigatórios não fornecidos'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        if ($this->pedido->delete($id)) {
+            $this->set_response([
+                'status' => true,
+                'message' => 'Pedido deletado com successo !'
+            ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao deletar pedido'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+    public function index_put()
+    {
+        $id = (int) $this->get('id');
+        if ((!$this->put('cd_tipo')) || (!$this->put('cd_status')) || (!$this->put('cd_funcionario')) || (!$this->put('marca')) || (!$this->put('modelo')) || (!$this->put('defeito')) || (!$this->put('descricao')) || ($id <= 0)) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $data = array(
+            'cd_tipo' => $this->put('cd_tipo'),
+            'cd_status' => $this->put('cd_status'),
+            'cd_funcionario' => $this->put('cd_funcionario'),
+            'marca' => $this->put('marca'),
+            'modelo' => $this->put('modelo'),
+            'defeito' => $this->put('defeito'),
+            'descricao' => $this->put('descricao')
+        );
+        if ($this->pedido->update($id, $data)) {
+            $this->set_response([
+                'status' => true,
+                'message' => 'Pedido alterado com successo !'
+            ], REST_Controller_Definitions::HTTP_OK);
+        } else {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao alterar pedido'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
 }

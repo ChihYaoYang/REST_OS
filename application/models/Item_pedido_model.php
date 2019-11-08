@@ -1,42 +1,46 @@
 <?php
-class Item_pedido_model extends CI_Model {
+class Item_pedido_model extends CI_Model
+{
     const table = 'item_pedido';
-    
-    public function get() {
-        $query = $this->db->get(self::table);
+
+    public function get($apikey)
+    {
+        $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Serviço,servicos.precos as Preços,');
+        $this->db->from('item_pedido');
+        $this->db->join('cadastro_pedido', 'cadastro_pedido.id=item_pedido.cd_cadastro_pedido', 'inner');
+        $this->db->join('servicos', 'servicos.id=item_pedido.cd_servicos', 'inner');
+        $this->db->join('funcionario', 'cadastro_pedido.cd_funcionario = funcionario.id', 'inner');
+        $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
+        $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
+        $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
+        $this->db->join('token', 'token.cd_funcionario = funcionario.id', 'inner');
+        $this->db->where(array('token.apikey' => $apikey));
+        $query = $this->db->get();
         return $query->result();
     }
-    public function getOne($id) {
+    public function getOne($id, $apikey)
+    {
         if ($id > 0) {
-            $this->db->where('id', $id);
-            $query = $this->db->get(self::table);
+            $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Serviço,servicos.precos as Preços,');
+            $this->db->from('item_pedido');
+            $this->db->join('cadastro_pedido', 'cadastro_pedido.id=item_pedido.cd_cadastro_pedido', 'inner');
+            $this->db->join('servicos', 'servicos.id=item_pedido.cd_servicos', 'inner');
+            $this->db->join('funcionario', 'cadastro_pedido.cd_funcionario = funcionario.id', 'inner');
+            $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
+            $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
+            $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
+            $this->db->join('token', 'token.cd_funcionario = funcionario.id', 'inner');
+            $this->db->where(array('token.apikey' => $apikey, (self::table) . '.id' => $id));
+            $query = $this->db->get();
             return $query->row(0);
         } else {
             return false;
         }
     }
-    public function insert($data = array()) {
+
+    public function insert($data = array())
+    {
         $this->db->insert(self::table, $data);
         return $this->db->affected_rows();
-    }
-    public function delete($id) {
-        // if ($id > 0) {
-        //     $this->db->where('cd_servicos', $id);
-        //     $this->db->delete('cadastro_pedido');
-        //     $this->db->where('id', $id);
-        //     $this->db->delete(self::table);
-        //     return $this->db->affected_rows();
-        // } else {
-        //     return false;
-        // }
-    }
-    public function update($id, $data = array()) {
-        // if ($id > 0) {
-        //     $this->db->where('id', $id);
-        //     $this->db->update(self::table, $data);
-        //     return $this->db->affected_rows();
-        // } else {
-        //     return false;
-        // }
     }
 }
