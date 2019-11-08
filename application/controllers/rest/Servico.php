@@ -16,6 +16,7 @@ class Servico extends REST_Controller
         parent::__construct();
         $this->load->model('Pedido_model', 'pedido');
         $this->load->model('Servico_model', 'servicos');
+        $this->load->model('Item_pedido_model', 'item');
     }
     public function index_get()
     {
@@ -27,8 +28,55 @@ class Servico extends REST_Controller
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
+    /////////////////////////////////////////Cadastrar serviço (item pedido)////////////////////////////////////////////////////////
+    public function index_post()
+    {
+        $id = (int) $this->get('id');
+        if ((!$this->post('servico')) || (!$this->post('precos'))) {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Campo não preenchidos'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            return;
+        }
+        $dados = array(
+            'servico' => $this->post('servico'),
+            'precos' => $this->post('precos')
+        );
+        $insert = $this->servicos->insert($dados);
 
+        if ($insert > 0) {
+            if (($id <= 0)) {
+                $this->set_response([
+                    'status' => false,
+                    'error' => 'Campo não preenchidos'
+                ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+                return;
+            }
 
+            $data = array(
+                'cd_cadastro_pedido' => $id,
+                'cd_servicos' => $insert
+            );
+            if ($this->item->insert($data)) {
+                $this->set_response([
+                    'status' => true,
+                    'message' => 'item inserido com successo !'
+                ], REST_Controller_Definitions::HTTP_OK);
+            } else {
+                $this->set_response([
+                    'status' => false,
+                    'error' => 'Falha ao inserir item'
+                ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            }
+        } else {
+            $this->set_response([
+                'status' => false,
+                'error' => 'Falha ao inserir serviço'
+            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function index_delete()
     {
         $id = (int) $this->get('id');
@@ -56,48 +104,48 @@ class Servico extends REST_Controller
     //function put apenas alterar(inserir) cd_servicos
     public function index_put()
     {
-        $id = (int) $this->get('id');
-        if ((!$this->put('servico')) || (!$this->put('precos'))) {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Campo não preenchidos'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-            return;
-        }
-        //Cadastro serviço
-        $dados = array(
-            'servico' => $this->put('servico'),
-            'precos' => $this->put('precos')
-        );
-        $insert_services = $this->servicos->insert($dados);
-        ////////////////////////////////////////////////////////////////////////////////////
-        if ($insert_services > 0) {
-            if (($id <= 0)) {
-                $this->set_response([
-                    'status' => false,
-                    'error' => 'Campo não preenchidos' . $id
-                ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-                return;
-            }
-            $data = array(
-                'cd_servicos' => "$insert_services"
-            );
-            if ($this->pedido->update($id, $data)) {
-                $this->set_response([
-                    'status' => true,
-                    'message' => 'Pedido alterado com successo !'
-                ], REST_Controller_Definitions::HTTP_OK);
-            } else {
-                $this->set_response([
-                    'status' => false,
-                    'error' => 'Falha ao alterar pedido'
-                ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-            }
-        } else {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Falha ao inserir serviço'
-            ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
-        }
-    }
+    //     $id = (int) $this->get('id');
+    //     if ((!$this->put('servico')) || (!$this->put('precos'))) {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Campo não preenchidos'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //         return;
+    //     }
+    //     //Cadastro serviço
+    //     $dados = array(
+    //         'servico' => $this->put('servico'),
+    //         'precos' => $this->put('precos')
+    //     );
+    //     $insert_services = $this->servicos->insert($dados);
+    //     ////////////////////////////////////////////////////////////////////////////////////
+    //     if ($insert_services > 0) {
+    //         if (($id <= 0)) {
+    //             $this->set_response([
+    //                 'status' => false,
+    //                 'error' => 'Campo não preenchidos' . $id
+    //             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //             return;
+    //         }
+    //         $data = array(
+    //             'cd_servicos' => "$insert_services"
+    //         );
+    //         if ($this->pedido->update($id, $data)) {
+    //             $this->set_response([
+    //                 'status' => true,
+    //                 'message' => 'Pedido alterado com successo !'
+    //             ], REST_Controller_Definitions::HTTP_OK);
+    //         } else {
+    //             $this->set_response([
+    //                 'status' => false,
+    //                 'error' => 'Falha ao alterar pedido'
+    //             ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //         }
+    //     } else {
+    //         $this->set_response([
+    //             'status' => false,
+    //             'error' => 'Falha ao inserir serviço'
+    //         ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+    //     }
+    // }
 }
