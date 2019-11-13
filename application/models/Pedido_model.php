@@ -5,8 +5,11 @@ class Pedido_model extends CI_Model
 
     public function get($apikey)
     {
-        $this->db->select(self::table . '.*');
+        $this->db->select(self::table . '.*,cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario');
         $this->db->join('funcionario', self::table . '.cd_funcionario = funcionario.id', 'inner');
+        $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
+        $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
+        $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
         $this->db->join('token', 'token.cd_funcionario = funcionario.id', 'inner');
         $this->db->where(array('token.apikey' => $apikey));
         $query = $this->db->get(self::table);

@@ -17,7 +17,6 @@ class Pedido extends REST_Controller
         $this->load->model('Pedido_model', 'pedido');
         $this->load->model('Cliente_model', 'cliente');
         $this->load->model('Servico_model', 'servicos');
-        $this->load->model('Item_pedido_model', 'item');
         date_default_timezone_set('America/Sao_Paulo');
     }
     public function index_get()
@@ -26,10 +25,8 @@ class Pedido extends REST_Controller
         $id = (int) $this->get('id');
         if ($id <= 0) {
             $data = $this->pedido->get($token);
-            $data = $this->item->get($token);
         } else {
             $data = $this->pedido->getOne($id, $token);
-            $data = $this->item->getOne($id,$token);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
