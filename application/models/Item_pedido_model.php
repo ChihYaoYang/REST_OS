@@ -5,7 +5,7 @@ class Item_pedido_model extends CI_Model
 
     public function getAll()
     {
-        $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Serviço,servicos.precos as Preços,');
+        $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Servico,servicos.precos as Precos,');
         $this->db->from('item_pedido');
         $this->db->join('cadastro_pedido', 'cadastro_pedido.id=item_pedido.cd_cadastro_pedido', 'inner');
         $this->db->join('servicos', 'servicos.id=item_pedido.cd_servicos', 'inner');
@@ -20,7 +20,7 @@ class Item_pedido_model extends CI_Model
     {
         if ($id > 0) {
             $this->db->where('item_pedido.cd_cadastro_pedido', $id);
-            $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Serviço,servicos.precos as Preços,');
+            $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Servico,servicos.precos as Precos,');
             $this->db->from('item_pedido');
             $this->db->join('cadastro_pedido', 'cadastro_pedido.id=item_pedido.cd_cadastro_pedido', 'inner');
             $this->db->join('servicos', 'servicos.id=item_pedido.cd_servicos', 'inner');
