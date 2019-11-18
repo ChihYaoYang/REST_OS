@@ -9,7 +9,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/REST_Controller_Definitions.php';
 require APPPATH . '/libraries/Format.php';
 
-class Item_pedido extends REST_Controller
+class Itempedido extends REST_Controller
 {
     public function __construct()
     {

@@ -19,7 +19,7 @@ class Item_pedido_model extends CI_Model
     public function getOne($id)
     {
         if ($id > 0) {
-            $this->db->where('item_pedido.id', $id);
+            $this->db->where('item_pedido.cd_cadastro_pedido', $id);
             $this->db->select('item_pedido.*, cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario, cadastro_pedido.marca as Marca,cadastro_pedido.modelo as Modelo,cadastro_pedido.defeito as Defeito,cadastro_pedido.descricao as Descricao,cadastro_pedido.data_pedido as Data_Cadastrado,  servicos.servico as Serviço,servicos.precos as Preços,');
             $this->db->from('item_pedido');
             $this->db->join('cadastro_pedido', 'cadastro_pedido.id=item_pedido.cd_cadastro_pedido', 'inner');
@@ -29,7 +29,7 @@ class Item_pedido_model extends CI_Model
             $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
             $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
             $query = $this->db->get();
-            return $query->row(0);
+            return $query->result();
         } else {
             return false;
         }
