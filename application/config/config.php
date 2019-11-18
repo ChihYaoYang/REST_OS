@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */  //https://ordemservices.000webhostapp.com/
-    //http://127.0.0.1/wsos/
-$config['base_url'] = 'https://ordemservices.000webhostapp.com/';
+    //http://127.0.0.1/REST_OS/
+$config['base_url'] = 'http://127.0.0.1/REST_OS/';
 
 /*
 |--------------------------------------------------------------------------
