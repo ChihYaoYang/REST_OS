@@ -24,9 +24,9 @@ class Pedido extends REST_Controller
         $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
         if ($id <= 0) {
-            $data = $this->pedido->get($token);
+            $data = $this->pedido->get();
         } else {
-            $data = $this->pedido->getOne($id, $token);
+            $data = $this->pedido->getOne($id);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }

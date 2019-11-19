@@ -3,26 +3,25 @@ class Pedido_model extends CI_Model
 {
     const table = 'cadastro_pedido';
 
-    public function get($apikey)
+    public function get()
     {
-        $this->db->select(self::table . '.*,cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario');
+        $this->db->select(self::table . '.*,cliente.nome as Cliente,cliente.email as Email,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario');
         $this->db->join('funcionario', self::table . '.cd_funcionario = funcionario.id', 'inner');
         $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
         $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
         $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
-        $this->db->join('token', 'token.cd_funcionario = funcionario.id', 'inner');
-        $this->db->where(array('token.apikey' => $apikey));
         $query = $this->db->get(self::table);
         return $query->result();
     }
 
-    public function getOne($id, $apikey)
+    public function getOne($id)
     {
         if ($id > 0) {
-            $this->db->select(self::table . '.*');
+            $this->db->select(self::table . '.*,cliente.nome as Cliente,cliente.email as Email,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario');
             $this->db->join('funcionario', self::table . '.cd_funcionario = funcionario.id', 'inner');
-            $this->db->join('token', 'token.cd_funcionario = funcionario.id', 'inner');
-            $this->db->where(array('token.apikey' => $apikey, (self::table) . '.id' => $id));
+            $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
+            $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
+            $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
             $query = $this->db->get(self::table);
             return $query->row(0);
         } else {
