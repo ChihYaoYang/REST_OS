@@ -42,6 +42,7 @@ class Servico extends REST_Controller
         $dados = array(
             'servico' => $this->post('servico'),
             'precos' => str_replace(',', '.', str_replace('.', '', $this->post('precos'))),
+            // 'precos' => $this->post('precos')
         );
         $insert = $this->servicos->insert($dados);
         if ($insert > 0) {
@@ -112,6 +113,7 @@ class Servico extends REST_Controller
         $dados = array(
             'servico' => $this->put('servico'),
             'precos' => str_replace(',', '.', str_replace('.', '', $this->put('precos'))),
+            'precos' => $this->put('precos')
         );
 
         if ($this->servicos->update($id, $dados)) {
