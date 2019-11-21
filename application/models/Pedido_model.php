@@ -36,8 +36,6 @@ class Pedido_model extends CI_Model
     public function delete($id)
     {
         if ($id > 0) {
-            $this->db->where('cd_cadastro_pedido', $id);
-            $this->db->delete('item_pedido');
             $this->db->where('id', $id);
             $this->db->delete(self::table);
             return $this->db->affected_rows();
