@@ -26,6 +26,13 @@ class Funcionario_model extends CI_Model
         $query = $this->db->get_where(self::table, $params);
         return $query->row();
     }
+    public function getphone($params)
+    {
+        $this->db->select(self::table . '.*, funcionario.id, token.apikey ');
+        $this->db->join('token', 'token.cd_funcionario=' . self::table . '.id');
+        $query = $this->db->get_where(self::table, $params);
+        return $query->row();
+    }
     ////////////////////////////////
 
     public function getAll()

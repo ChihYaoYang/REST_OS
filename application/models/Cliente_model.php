@@ -26,6 +26,11 @@ class Cliente_model extends CI_Model
         $query = $this->db->get_where(self::table, $params);
         return $query->row();
     }
+    public function getUsuarioPhone($params)
+    {
+        $query = $this->db->get_where(self::table, $params);
+        return $query->row();
+    }
     public function insert($dados = array())
     {
         $dados['password'] = sha1($dados['password'] . self::password);

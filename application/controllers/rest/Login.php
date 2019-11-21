@@ -44,6 +44,32 @@ class Login extends CI_Controller
         }
     }
 
+    public function loginphone()
+    {
+        $post = json_decode(file_get_contents("php://input"));
+        if (empty($post->telefone)) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        } else {
+            $login = $this->funcionario->getphone(array('telefone' => $post->telefone));
+            $usuario = $this->cliente->getUsuarioPhone(array('telefone' => $post->telefone));
+            if ($login) {
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'status' => $login->status, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            } else if ($usuario) {
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(array('id' => $usuario->id, 'nome' => $usuario->nome, 'email' => $usuario->email, 'status' => $usuario->status), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            } else {
+                $this->output
+                    ->set_status_header(400)
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Número não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
+        }
+    }
+
     public function cadastro()
     {
         $post = json_decode(file_get_contents("php://input"));
