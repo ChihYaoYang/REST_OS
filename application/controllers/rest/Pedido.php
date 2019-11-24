@@ -21,7 +21,6 @@ class Pedido extends REST_Controller
     }
     public function index_get()
     {
-        $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
         if ($id <= 0) {
             $data = $this->pedido->get();
@@ -30,7 +29,6 @@ class Pedido extends REST_Controller
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
-
     //Novo pedido com formaulário de dados do cliente para cadastrar novo cliente
     public function novo_pedido_post()
     {

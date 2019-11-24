@@ -324,7 +324,7 @@ $config['rest_keys_table'] = 'token'; //onde esta a tabela com a chave de acesso
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = true;//obriga a autenticação
+$config['rest_enable_keys'] = false;//obriga a autenticação
 
 /*
 |--------------------------------------------------------------------------

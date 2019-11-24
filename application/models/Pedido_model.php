@@ -22,12 +22,30 @@ class Pedido_model extends CI_Model
             $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
             $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
             $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
+            $this->db->where('cadastro_pedido.id', $id);
             $query = $this->db->get(self::table);
             return $query->row(0);
         } else {
             return false;
         }
     }
+
+    public function Clientget($id)
+    {
+        if ($id > 0) {
+            $this->db->select(self::table . '.*,cliente.nome as Cliente,tipo.type as Tipo,status.status as Status,funcionario.nome as Funcionario');
+            $this->db->join('funcionario', self::table . '.cd_funcionario = funcionario.id', 'inner');
+            $this->db->join('cliente', 'cadastro_pedido.cd_cliente=cliente.id', 'inner');
+            $this->db->join('tipo', 'cadastro_pedido.cd_tipo=tipo.id', 'inner');
+            $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
+            $this->db->where('cadastro_pedido.cd_cliente', $id);
+            $query = $this->db->get(self::table);
+            return $query->row(0);
+        } else {
+            return false;
+        }
+    }
+
     public function insert($data = array())
     {
         $this->db->insert(self::table, $data);
