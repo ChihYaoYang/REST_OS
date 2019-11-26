@@ -10,7 +10,7 @@ class Status_model extends CI_Model {
         if ($id > 0) {
             $this->db->where('id', $id);
             $query = $this->db->get(self::table);
-            return $query->row(0);
+            return $query->result();
         } else {
             return false;
         }

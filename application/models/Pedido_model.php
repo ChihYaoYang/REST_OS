@@ -24,7 +24,7 @@ class Pedido_model extends CI_Model
             $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
             $this->db->where('cadastro_pedido.id', $id);
             $query = $this->db->get(self::table);
-            return $query->row(0);
+            return $query->result();
         } else {
             return false;
         }
@@ -40,7 +40,7 @@ class Pedido_model extends CI_Model
             $this->db->join('status', 'cadastro_pedido.cd_status=status.id', 'inner');
             $this->db->where('cadastro_pedido.cd_cliente', $id);
             $query = $this->db->get(self::table);
-            return $query->row(0);
+            return $query->result();
         } else {
             return false;
         }

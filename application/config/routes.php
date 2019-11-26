@@ -62,4 +62,4 @@ $route['rest/Servico/(:num)'] = 'rest/Servico/index/id/$1';
 $route['rest/Status/(:num)'] = 'rest/Status/index/id/$1';
 $route['rest/Tipo/(:num)'] = 'rest/Tipo/index/id/$1';
 $route['rest/Itempedido/(:num)'] = 'rest/Itempedido/index/id/$1';
-$route['rest/ClientPedido/(:num)'] = 'rest/ClientPedido/index/id/$1';
+$route['rest/Clientpedido/(:num)'] = 'rest/Clientpedido/index/id/$1';
