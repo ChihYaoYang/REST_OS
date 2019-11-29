@@ -76,9 +76,9 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => '127.0.0.1',
-	'username' => 'root', //id11428463_os
+	'username' => 'root', 
 	'password' => 'blade123',
-	'database' => 'os', //id11428463_os
+	'database' => 'os', 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -90,8 +90,7 @@ $db['default'] = array(
 	'swap_pre' => '',
 	'encrypt' => FALSE,
 	'compress' => FALSE,
-	'stricton' => TRUE, //000webhost to true
-	//TRUE/FALSE (boolean) - 是否使用 “Strict Mode” 連線，使用嚴格的 SQL 對開發中的應用程式是件好事。
+	'stricton' => TRUE,
 	'failover' => array(),
 	'save_queries' => TRUE
 );
