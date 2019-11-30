@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1',
-	'username' => 'root', 
-	'password' => 'blade123',
-	'database' => 'os', 
+	'hostname' => 'dbchih.mysql.dbaas.com.br',
+	'username' => 'dbchih', 
+	'password' => 'dbChih#19S3',
+	'database' => 'dbchih', 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
